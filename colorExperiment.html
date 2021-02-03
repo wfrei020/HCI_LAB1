@@ -52,7 +52,7 @@
 </body>
 <script language="JavaScript">
 $(function() {
-    var colorList = ["red", "green","blue","yellow","white","black","orange","pink"]
+    var colorList = ["red", "green","blue","yellow","brown","purple","orange","pink"]
     var userAnswers = []
 
     var NUMBER_OF_TESTS = 20
@@ -67,9 +67,28 @@ $(function() {
         downloadAnchorNode.remove();
       }
 
+      function getRandomNumber(max){
+        return  Math.floor(Math.random()*max)
+      }
+      function getUniqueRandomColor(){
+        var randomColor = []
+        i=0
+        while (i<4){
+          tempColor = getRandomNumber(colorList.length)
+          if(!randomColor.includes(tempColor)){
+            randomColor[i] = tempColor;
+            i++;
+          }
+        }
+        return randomColor
+      }
+
       function nextTest(){
-          randomInt = Math.floor(Math.random()*colorList.length)
-          $(".givenColor").css("background-color",colorList[randomInt]);
+          randomInt = getUniqueRandomColor();
+          console.log(randomInt)
+          randomNUM= getRandomNumber(4)+1
+          $(".givenColor").css("background-color",colorList[randomInt[0]]);
+          $(".option"+randomNUM).html("<span>"+colorList[randomInt[0]] +"</span>")
       }
 
 
