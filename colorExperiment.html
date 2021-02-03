@@ -34,10 +34,10 @@
                 </div>
                 <div class="vertical_item">
                     <div class="flex">
-                        <div class="buttonChoiceItem option1"></div>
-                        <div class="buttonChoiceItem option2"></div>
-                        <div class="buttonChoiceItem option3"></div>
-                        <div class="buttonChoiceItem option4"></div>
+                        <div class="buttonChoiceItem option1"><span>button 1</span></div>
+                        <div class="buttonChoiceItem option2"><span>button 2</span></div>
+                        <div class="buttonChoiceItem option3"><span>button 3</span></div>
+                        <div class="buttonChoiceItem option4"><span>button 4</span></div>
                     </div>
                 </div>
             </div>
@@ -53,6 +53,9 @@
 <script language="JavaScript">
 $(function() {
     var colorList = ["red", "green","blue","yellow","white","black","orange","pink"]
+    var userAnswers = []
+
+    var NUMBER_OF_TESTS = 20
 
     function downloadObjectAsJson(exportObj, exportName){
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
@@ -65,12 +68,33 @@ $(function() {
       }
 
       function nextTest(){
+          randomInt = Math.floor(Math.random()*colorList.length)
+          $(".givenColor").css("background-color",colorList[randomInt]);
+      }
+
+
+
+      function getTestResults(){
 
       }
+
+      function beginTest(){
+          //initialize all arrays and their randomnes
+          if(userAnswers.length != 0 )
+            userAnswers = []
+
+          nextTest();
+      }
+
+      $(".buttonChoiceItem").click(function(elem){
+        nextTest();
+
+      })
 
       $("#startTest").click(function(){
         $(".gettingStartedContainer").hide();
         $(".experimentContainer").show();
+        beginTest();
       })
 
       function init(){
