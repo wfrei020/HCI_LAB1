@@ -3,3 +3,34 @@ html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}bo
 .clearfix:after {visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
 
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+
+.givenColor{
+    width:100px;
+    height:40px;
+    background-color: red;
+}
+
+.body{
+    margin :10%;
+}
+
+.vertical_flex{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vertical_item{
+
+}
+
+.flex{
+    display:flex;
+}
+
+.buttonChoiceItem{
+    width:15%
+    height:15%;
+    background-color: gray;
+}

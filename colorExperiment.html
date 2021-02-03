@@ -9,13 +9,44 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <div class="gettingStartedContainer">
-
+    <div class="header">
+        <div>
+            <h1>Human Computer Interaction</h1>
+        </div>
     </div>
-    <div class="experimentContainer">
+    <div class="body">
+        <div class="gettingStartedContainer" style="display:None;">
+            <div class="welcomeContainer">
+                <strong>Welcome To Our Experiment</strong>
+            </div>
+            <div class="experimentMessage">
+                <p>We have implemented an experiment to identify the reaction times of different user.</p>
+                <p>The test is simple, all you are require to do is match the correct color to the color show</p>
+                <p>When you are ready please press start</p>
+            </div>
+            <div>
+                <button id="startTest">Start Test</button>
+            </div>
+        </div>
+        <div class="experimentContainer" style="display:None;">
+            <div class="vertical_flex">
+                <div class="givenColor vertical_item">
+                </div>
+                <div class="vertical_item">
+                    <div class="buttonChoiceFlex">
+                        <div class="buttonChoiceItem option1"></div>
+                        <div class="buttonChoiceItem option2"></div>
+                        <div class="buttonChoiceItem option3"></div>
+                        <div class="buttonChoiceItem option4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="resultsContainer" style="display:None;">
 
+        </div>
     </div>
-    <div class="resultsContainer">
+    <div class="footer">
 
     </div>
 </body>
@@ -32,6 +63,22 @@ $(function() {
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
       }
+
+      function nextTest(){
+
+      }
+
+      $("#startTest").click(function(){
+        $(".gettingStartedContainer").hide();
+        $(".experimentContainer").show();
+      })
+
+      function init(){
+          $(".gettingStartedContainer").show();
+
+      }
+
+      init();
 
  console.log( "ready!" );
 });
