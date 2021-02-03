@@ -34,7 +34,7 @@
                 </div>
                 <div class="vertical_item">
                     <div class="flex">
-                        <div class="buttonChoiceItem option1"><span>button 1</span></div>
+                        <div class="buttonChoiceItem option1"><input type="hidden" name="color" value="" ><span>button 1</span></div>
                         <div class="buttonChoiceItem option2"><span>button 2</span></div>
                         <div class="buttonChoiceItem option3"><span>button 3</span></div>
                         <div class="buttonChoiceItem option4"><span>button 4</span></div>
@@ -53,7 +53,7 @@
 <script language="JavaScript">
 $(function() {
     var colorList = ["red", "green","blue","yellow","brown","purple","orange","pink"]
-    var userAnswers = []
+    var testCase = []
 
     var NUMBER_OF_TESTS = 20
 
@@ -88,8 +88,16 @@ $(function() {
           console.log(randomInt)
           randomNUM= getRandomNumber(4)+1
           $(".givenColor").css("background-color",colorList[randomInt[0]]);
-          $(".option"+randomNUM).html("<span>"+colorList[randomInt[0]] +"</span>")
+
+          $(".option"+randomNUM +" span").html(colorList[randomInt[0]])
+          $(".option"+randomNUM).find("input[name=color]").val(colorList[randomInt[0]]);
+          testCase[testCase.length] = {testNumber : testCase.length+1 , testColor:colorList[randomInt[0]] , startTime:1,StopTime:0, userResponse:""};
+
+
+          console.log(testCase)
+
       }
+
 
 
 
@@ -99,13 +107,15 @@ $(function() {
 
       function beginTest(){
           //initialize all arrays and their randomnes
-          if(userAnswers.length != 0 )
-            userAnswers = []
+          if(testCase.length != 0 )
+            testCase = []
 
           nextTest();
       }
 
-      $(".buttonChoiceItem").click(function(elem){
+      $(".buttonChoiceItem").click(function(event){
+        console.log(event.currentTarget)
+        console.log($(event.currentTarget).find("input").val());
         nextTest();
 
       })
