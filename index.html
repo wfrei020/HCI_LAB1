@@ -1,1 +1,356 @@
-hello world
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>Human Computer Interaction</h1>
+        </div>
+    </div>
+    <div class="body">
+        <div class="gettingStartedContainer" style="display:None;">
+            <div class="welcomeContainer">
+                <strong>Welcome To Our Experiment</strong>
+            </div>
+            <div class="experimentMessage">
+                <p>We have implemented an experiment to identify the reaction times of different user.</p>
+                <p>The test is simple, all you are require to do is match the correct color to the color show</p>
+                <p>When you are ready please press start</p>
+            </div>
+            <div>
+                <button id="startTest">Start Test</button>
+            </div>
+            <div class="flex">
+            <div>
+              <canvas id="myChart" height="400" ></canvas>
+            </div>
+            <div>
+                <canvas id="myTimes" height="400" ></canvas>
+              </div>
+          </div>
+        </div>
+        <div class="experimentContainer" style="display:None;">
+            <div class="vertical_flex">
+                <div class="givenColor vertical_item">
+                </div>
+                <div class="vertical_item">
+                    <div class="flex">
+                        <div class="buttonChoiceItem option1"><input type="hidden" name="color" value="" ><span>button 1</span></div>
+                        <div class="buttonChoiceItem option2"><input type="hidden" name="color" value="" ><span>button 2</span></div>
+                        <div class="buttonChoiceItem option3"><input type="hidden" name="color" value="" ><span>button 3</span></div>
+                        <div class="buttonChoiceItem option4"><input type="hidden" name="color" value="" ><span>button 4</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="resultsContainer" style="display:None;">
+          <div>
+            <strong>Correct Answers</strong>
+            <span id="numberOfCorrectAnswers"></span>
+            <strong>Average Time to select Correct Answers</strong>
+            <span id="averageTime"></span>
+          </div>
+          <div>
+            <strong>Incorrect Answers</strong>
+            <span id="numberOfIncorrectAnswers"></span>
+
+          </div>
+          <div>
+              <button id="newTest">New Test</button>
+          </div>
+          <div>
+            <div>
+                <canvas id="ExperimentTimes" height="100" ></canvas>
+              </div>
+          </div>
+        </div>
+    </div>
+    <div class="footer">
+
+    </div>
+</body>
+<script language="JavaScript">
+$(function() {
+    var colorList = ["red", "green","blue","yellow","brown","purple","orange","pink"]
+    var testCase = []
+    var experiment = []
+
+    //var NUMBER_OF_TESTS = 20
+    var NUMBER_OF_TESTS = 5
+
+
+    function downloadObjectAsJson(exportObj, exportName){
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".txt");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+      }
+
+      function getRandomNumber(max){
+        return  Math.floor(Math.random()*max)
+      }
+      function getUniqueRandomColor(){
+        var randomColor = []
+        i=0
+        while (i<4){
+          tempColor = getRandomNumber(colorList.length)
+          if(!randomColor.includes(tempColor)){
+            randomColor[i] = tempColor;
+            i++;
+          }
+        }
+        return randomColor
+      }
+
+      function getUniqueRandomOrder(l,min){
+      var randomOrder = []
+        i=0
+        while (i<l){
+          tempOrder = getRandomNumber(l)+min
+          if(!randomOrder.includes(tempOrder)){
+            randomOrder[i] = tempOrder;
+            i++;
+          }
+        }
+        return randomOrder
+      }
+
+      function nextTest(){
+          randomInt = getUniqueRandomColor();
+          randomNUM= getUniqueRandomOrder(4,1)
+          $(".givenColor").css("background-color",colorList[randomInt[0]]);
+          for(i = 0 ; i < randomNUM.length ; i++){
+          $(".option"+randomNUM[i] +" span").html(colorList[randomInt[i]])
+          $(".option"+randomNUM[i]).find("input[name=color]").val(colorList[randomInt[i]]);
+          }
+        var d = new Date();
+        var n = d.getTime();
+          testCase[testCase.length] = {testNumber : testCase.length+1 , testColor:colorList[randomInt[0]] , startTime:n,stopTime:0, userResponse:""};
+
+      }
+
+      function storeTestResults(c,i,avg){
+        experiment[experiment.length] ={expNumber :experiment.length + 1, correct: c , incorrect : i , avgTime : avg}
+      }
+var optionsTime = {
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time in Seconds'
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Experiment Number'
+                }
+              }]
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Custom Chart Title'
+            }
+        }
+    }
+      var options = {
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Number of times'
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Experiment Number'
+                }
+              }]
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Custom Chart Title'
+            }
+        }
+    }
+var myTimeChart
+      function showChartAllTime(){
+
+
+        times = []
+        test_number = []
+        pointcolors =[]
+        for(i = 0 ; i < testCase.length ; i++){
+          test_number[i] = testCase[i].testNumber
+            times[i] = (testCase[i].stopTime - testCase[i].startTime)/1000
+
+            if(testCase[i].testColor == testCase[i].userResponse)
+            pointcolors[i] = "green"
+            else
+              pointcolors[i] = "red"
+        }
+        myTimeChart = new Chart($('#ExperimentTimes'), {
+            type: 'line',
+            data: {
+              labels: test_number,
+              datasets: [{
+                label: 'Time to Answer Correct Answers',
+                data: times,
+                borderColor:"yellow",
+                pointBackgroundColor:pointcolors,
+                pointBorderColor:pointcolors,
+                pointBorderWidth:"10"
+              }]
+            },
+            options: optionsTime
+        });
+
+        $("#ExperimentTimes").show();
+      }
+
+var myLineChart
+      function showChart(){
+
+
+        correct = []
+        incorrect = []
+        exp_number = []
+        avgTime = []
+
+        for(i = 0 ; i < experiment.length ; i++){
+          exp_number[i] = experiment[i].expNumber
+          correct[i] = experiment[i].correct
+          incorrect[i] = experiment[i].incorrect
+          avgTime[i] = experiment[i].avgTime
+        }
+        myLineChart = new Chart($('#myChart'), {
+            type: 'line',
+            data: {
+              labels: exp_number,
+              datasets: [{
+                label: 'Correct Answers',
+                data: correct,
+                borderColor:"yellow"
+              },
+              {
+                label: 'Incorrect Answers',
+                data: incorrect,
+                borderColor:"red"
+              }]
+            },
+            options: options
+        });
+
+        $("#mychart").show();
+
+      myTimeChart = new Chart($('#myTimes'), {
+            type: 'line',
+            data: {
+              labels: exp_number,
+              datasets: [{
+                label: 'Average Time',
+                data: avgTime,
+                borderColor:"black"
+              }]
+            },
+            options: optionsTime
+        });
+      $("#myTimes").show();
+
+      }
+
+
+      function getTestResults(){
+        $(".experimentContainer").hide();
+        $(".resultsContainer").show();
+        var correct= 0
+        countTimerOnCorrect = 0;
+        for(i = 0 ; i < testCase.length ; i++){
+
+          if(testCase[i].testColor == testCase[i].userResponse){
+              correct += 1;
+
+              countTimerOnCorrect += (testCase[i].stopTime - testCase[i].startTime);
+          }
+
+
+
+        }
+
+        console.log(countTimerOnCorrect)
+        $("#numberOfCorrectAnswers").html(correct);
+        $("#averageTime").html(countTimerOnCorrect/(1000*correct));
+        $("#numberOfIncorrectAnswers").html(NUMBER_OF_TESTS -  correct);
+          storeTestResults(correct,NUMBER_OF_TESTS -  correct,countTimerOnCorrect/(1000*correct));
+
+    showChartAllTime()
+
+      }
+
+      function beginTest(){
+          //initialize all arrays and their randomnes
+          if(testCase.length != 0 )
+            testCase = []
+
+          nextTest();
+      }
+
+      $(".buttonChoiceItem").click(function(event){
+        var d = new Date();
+        var n = d.getTime();
+        testCase[testCase.length -1]["userResponse"] = $(event.currentTarget).find("input").val();
+        testCase[testCase.length -1]["stopTime"] = n;
+
+        console.log(testCase);
+        if(testCase.length < NUMBER_OF_TESTS )
+          nextTest();
+        else
+          getTestResults();
+
+
+
+      })
+
+      $("#startTest").click(function(){
+        $(".gettingStartedContainer").hide();
+        $(".experimentContainer").show();
+        beginTest();
+        if(myLineChart)
+          myLineChart.destroy();
+
+        if(myTimeChart)
+          myTimeChart.destroy();
+      })
+      $("#newTest").click(function(){
+        $(".resultsContainer").hide();
+        $(".gettingStartedContainer").show();
+
+        if(experiment.length > 1)
+            showChart()
+
+      })
+      function init(){
+          $(".gettingStartedContainer").show();
+
+      }
+
+      init();
+
+
+});
+  </script>
+</html>
