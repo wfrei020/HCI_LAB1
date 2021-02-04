@@ -4,6 +4,12 @@ html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}bo
 
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
+.header{
+    text-align: center;
+    color: black;
+    font-family: sans-serif;
+    font-size: 25px;
+}
 
 .givenColor{
     width:100px;
@@ -13,6 +19,21 @@ html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}bo
 
 .body{
     margin :10%;
+    text-align: center;
+    font-size: 15px;
+    font-family: sans-serif;
+}
+
+#startTest{
+    font-size: 20px;
+    font-family: sans-serif;
+    padding: 15px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#startTest:hover{
+    background-color: lightgreen;
+    color:black;
 }
 
 .vertical_flex{
