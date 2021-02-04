@@ -132,7 +132,10 @@ $(function() {
         testCase[testCase.length -1]["StopTime"] = n;
 
         console.log(testCase);
-        nextTest();
+        if(testCase.length < NUMBER_OF_TESTS )
+          nextTest();
+        else
+          getTestResults();
 
       })
 
