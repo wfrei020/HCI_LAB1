@@ -58,8 +58,13 @@
           <div>
               <button id="newTest">New Test</button>
           </div>
-          <div>
-            <canvas id="myChart" height="100" ></canvas>
+          <div class="flex">
+            <div>
+              <canvas id="myChart" height="400" ></canvas>
+            </div>
+            <div>
+                <canvas id="myTimes" height="400" ></canvas>
+              </div>
           </div>
         </div>
     </div>
@@ -74,7 +79,7 @@ $(function() {
     var experiment = []
 
     //var NUMBER_OF_TESTS = 20
-    var NUMBER_OF_TESTS = 3
+    var NUMBER_OF_TESTS = 10
 
     function downloadObjectAsJson(exportObj, exportName){
         var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
@@ -132,11 +137,47 @@ $(function() {
       function storeTestResults(c,i,avg){
         experiment[experiment.length] ={expNumber :experiment.length + 1, correct: c , incorrect : i , avgTime : avg}
       }
-
+var optionsTime = {
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time in Seconds'
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Experiment Number'
+                }
+              }]
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Custom Chart Title'
+            }
+        }
+    }
       var options = {
         scales: {
-            y: {
-                beginAtZero: true
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Number of times'
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Experiment Number'
+                }
+              }]
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Custom Chart Title'
             }
         }
     }
@@ -145,24 +186,50 @@ var myLineChart
         console.log("enter")
 
         correct = []
+        incorrect = []
         exp_number = []
+        avgTime = []
 
         for(i = 0 ; i < experiment.length ; i++){
           exp_number[i] = experiment[i].expNumber
           correct[i] = experiment[i].correct
+          incorrect[i] = experiment[i].incorrect
+          avgTime[i] = experiment[i].avgTime
         }
-        console.log(correct)
-        console.log(exp_number)
         myLineChart = new Chart($('#myChart'), {
             type: 'line',
             data: {
               labels: exp_number,
-              datasets: [{data: correct}]
+              datasets: [{
+                label: 'Correct Answers',
+                data: correct,
+                borderColor:"yellow"
+              },
+              {
+                label: 'Incorrect Answers',
+                data: incorrect,
+                borderColor:"red"
+              }]
             },
             options: options
         });
 
         $("#mychart").show();
+
+      myTimeChart = new Chart($('#myTimes'), {
+            type: 'line',
+            data: {
+              labels: exp_number,
+              datasets: [{
+                label: 'Average Time',
+                data: avgTime,
+                borderColor:"black"
+              }]
+            },
+            options: optionsTime
+        });
+      $("#myTimes").show();
+
       }
 
 
@@ -226,6 +293,9 @@ var myLineChart
         $(".gettingStartedContainer").show();
         if(myLineChart)
           myLineChart.destroy();
+
+        if(myTimeChart)
+          myTimeChart.destroy();
       })
       function init(){
           $(".gettingStartedContainer").show();
