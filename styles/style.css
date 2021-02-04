@@ -80,3 +80,17 @@ html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}bo
     border-radius: 55%;
     line-height: 2;
 }
+
+
+.countDown{
+    float : right;
+    position: absolute;
+    right: 62px;
+    top: -33px;
+    font-size: 52px;
+    background-color: #c6cfc8;
+}
+.experimentContainer{
+    position: relative;
+    display: none;
+}

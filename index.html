@@ -37,7 +37,7 @@
               </div>
           </div>
         </div>
-        <div class="experimentContainer" style="display:None;">
+        <div class="experimentContainer">
             <div class="vertical_flex">
                 <div class="givenColor">
                 </div>
@@ -49,6 +49,9 @@
                         <div class="buttonChoiceItem option4"><input type="hidden" name="color" value="" ><span>button 4</span></div>
                     </div>
                 </div>
+            </div>
+            <div class="countDown">
+                  <span id="countDown"></span>
             </div>
         </div>
         <div class="resultsContainer" style="display:None;">
@@ -82,7 +85,9 @@ $(function() {
     var colorList = ["red", "green","blue","yellow","brown","purple","orange","pink"]
     var testCase = []
     var experiment = []
+    var count = 0;
 
+    var counter
     //var NUMBER_OF_TESTS = 20
     var NUMBER_OF_TESTS = 20
 
@@ -139,10 +144,10 @@ $(function() {
              if(getbackground < 2){
               //color background correct
               $(".option"+randomNUM[i]).css('background-color',colorList[randomInt[i]]);
-              $(".option"+randomNUM[i]).css('color',"white");
+              $(".option"+randomNUM[i]).css('color',"black");
              }
              else{
-                $(".option"+randomNUM[i]).css('background-color','white');
+                $(".option"+randomNUM[i]).css('background-color','black');
                 $(".option"+randomNUM[i]).css('color',colorList[randomInt[i]]);
              }
 
@@ -160,6 +165,7 @@ $(function() {
         var d = new Date();
         var n = d.getTime();
           testCase[testCase.length] = {testNumber : testCase.length+1 , testColor:colorList[randomInt[0]] , startTime:n,stopTime:0, userResponse:""};
+         counter =  setInterval(timer, 10); //10 will  run it every 100th of a second
 
       }
 
@@ -314,7 +320,6 @@ var myLineChart
 
         }
 
-        console.log(countTimerOnCorrect)
         $("#numberOfCorrectAnswers").html(correct);
         $("#averageTime").html(countTimerOnCorrect/(1000*correct));
         $("#numberOfIncorrectAnswers").html(NUMBER_OF_TESTS -  correct);
@@ -333,12 +338,13 @@ var myLineChart
       }
 
       $(".buttonChoiceItem").click(function(event){
+        clearInterval(counter);
+        count = 0;
         var d = new Date();
         var n = d.getTime();
         testCase[testCase.length -1]["userResponse"] = $(event.currentTarget).find("input").val();
         testCase[testCase.length -1]["stopTime"] = n;
 
-        console.log(testCase);
         if(testCase.length < NUMBER_OF_TESTS )
           nextTest();
         else
@@ -366,6 +372,17 @@ var myLineChart
             showChart()
 
       })
+//timer
+
+
+function timer()
+{
+     count++;
+     display = count /100
+
+    $("#countDown").html(display.toFixed(2)+ " secs");
+}
+
       function init(){
           $(".gettingStartedContainer").show();
 
