@@ -28,6 +28,14 @@
             <div>
                 <button id="startTest">Start Test</button>
             </div>
+            <div class="flex">
+            <div>
+              <canvas id="myChart" height="400" ></canvas>
+            </div>
+            <div>
+                <canvas id="myTimes" height="400" ></canvas>
+              </div>
+          </div>
         </div>
         <div class="experimentContainer" style="display:None;">
             <div class="vertical_flex">
@@ -58,12 +66,9 @@
           <div>
               <button id="newTest">New Test</button>
           </div>
-          <div class="flex">
+          <div>
             <div>
-              <canvas id="myChart" height="400" ></canvas>
-            </div>
-            <div>
-                <canvas id="myTimes" height="400" ></canvas>
+                <canvas id="ExperimentTimes" height="100" ></canvas>
               </div>
           </div>
         </div>
@@ -182,9 +187,44 @@ var optionsTime = {
             }
         }
     }
+var myTimeChart
+      function showChartAllTime(){
+
+
+        times = []
+        test_number = []
+        pointcolors =[]
+        for(i = 0 ; i < testCase.length ; i++){
+          test_number[i] = testCase[i].testNumber
+            times[i] = (testCase[i].stopTime - testCase[i].startTime)/1000
+
+            if(testCase[i].testColor == testCase[i].userResponse)
+            pointcolors[i] = "green"
+            else
+              pointcolors[i] = "red"
+        }
+        myTimeChart = new Chart($('#ExperimentTimes'), {
+            type: 'line',
+            data: {
+              labels: test_number,
+              datasets: [{
+                label: 'Time to Answer Correct Answers',
+                data: times,
+                borderColor:"yellow",
+                pointBackgroundColor:pointcolors,
+                pointBorderColor:pointcolors,
+                pointBorderWidth:"10"
+              }]
+            },
+            options: optionsTime
+        });
+
+        $("#ExperimentTimes").show();
+      }
+
 var myLineChart
       function showChart(){
-        console.log("enter")
+
 
         correct = []
         incorrect = []
@@ -243,7 +283,7 @@ var myLineChart
 
           if(testCase[i].testColor == testCase[i].userResponse){
               correct += 1;
-              console.log(testCase[i].stopTime)
+
               countTimerOnCorrect += (testCase[i].stopTime - testCase[i].startTime);
           }
 
@@ -257,8 +297,7 @@ var myLineChart
         $("#numberOfIncorrectAnswers").html(NUMBER_OF_TESTS -  correct);
           storeTestResults(correct,NUMBER_OF_TESTS -  correct,countTimerOnCorrect/(1000*correct));
 
-          if(experiment.length > 1)
-            showChart()
+    showChartAllTime()
 
       }
 
@@ -282,21 +321,27 @@ var myLineChart
         else
           getTestResults();
 
+
+
       })
 
       $("#startTest").click(function(){
         $(".gettingStartedContainer").hide();
         $(".experimentContainer").show();
         beginTest();
-      })
-      $("#newTest").click(function(){
-        $(".resultsContainer").hide();
-        $(".gettingStartedContainer").show();
         if(myLineChart)
           myLineChart.destroy();
 
         if(myTimeChart)
           myTimeChart.destroy();
+      })
+      $("#newTest").click(function(){
+        $(".resultsContainer").hide();
+        $(".gettingStartedContainer").show();
+
+        if(experiment.length > 1)
+            showChart()
+
       })
       function init(){
           $(".gettingStartedContainer").show();
@@ -305,7 +350,7 @@ var myLineChart
 
       init();
 
- console.log( "ready!" );
+
 });
   </script>
 </html>
