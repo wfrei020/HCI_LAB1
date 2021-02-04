@@ -84,7 +84,7 @@ $(function() {
     var experiment = []
 
     //var NUMBER_OF_TESTS = 20
-    var NUMBER_OF_TESTS = 5
+    var NUMBER_OF_TESTS = 20
 
 
     function downloadObjectAsJson(exportObj, exportName){
@@ -128,10 +128,33 @@ $(function() {
 
       function nextTest(){
           randomInt = getUniqueRandomColor();
-          randomNUM= getUniqueRandomOrder(4,1)
+          randomColorText = getUniqueRandomColor();
+          randomNUM= getUniqueRandomOrder(4,1);
+          var getbackground = 1;
           $(".givenColor").css("background-color",colorList[randomInt[0]]);
           for(i = 0 ; i < randomNUM.length ; i++){
-          $(".option"+randomNUM[i] +" span").html(colorList[randomInt[i]])
+             getbackground = getRandomNumber(2)  + 1;
+             placeCorrectText = getRandomNumber(4)  + 1;
+
+             if(getbackground < 2){
+              //color background correct
+              $(".option"+randomNUM[i]).css('background-color',colorList[randomInt[i]]);
+              $(".option"+randomNUM[i]).css('color',"white");
+             }
+             else{
+                $(".option"+randomNUM[i]).css('background-color','white');
+                $(".option"+randomNUM[i]).css('color',colorList[randomInt[i]]);
+             }
+
+             if(placeCorrectText == 2 && i == 0){
+                $(".option"+randomNUM[i] +" span").html(colorList[randomColorText[i]]);
+             }
+             else{
+                $(".option"+randomNUM[i] +" span").html(colorList[randomColorText[i]]);
+             }
+
+
+
           $(".option"+randomNUM[i]).find("input[name=color]").val(colorList[randomInt[i]]);
           }
         var d = new Date();
