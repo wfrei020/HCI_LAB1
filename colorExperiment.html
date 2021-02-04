@@ -35,9 +35,9 @@
                 <div class="vertical_item">
                     <div class="flex">
                         <div class="buttonChoiceItem option1"><input type="hidden" name="color" value="" ><span>button 1</span></div>
-                        <div class="buttonChoiceItem option2"><span>button 2</span></div>
-                        <div class="buttonChoiceItem option3"><span>button 3</span></div>
-                        <div class="buttonChoiceItem option4"><span>button 4</span></div>
+                        <div class="buttonChoiceItem option2"><input type="hidden" name="color" value="" ><span>button 2</span></div>
+                        <div class="buttonChoiceItem option3"><input type="hidden" name="color" value="" ><span>button 3</span></div>
+                        <div class="buttonChoiceItem option4"><input type="hidden" name="color" value="" ><span>button 4</span></div>
                     </div>
                 </div>
             </div>
@@ -83,18 +83,30 @@ $(function() {
         return randomColor
       }
 
+      function getUniqueRandomOrder(l,min){
+      var randomOrder = []
+        i=0
+        while (i<l){
+          tempOrder = getRandomNumber(l)+min
+          if(!randomOrder.includes(tempOrder)){
+            randomOrder[i] = tempOrder;
+            i++;
+          }
+        }
+        return randomOrder
+      }
+
       function nextTest(){
           randomInt = getUniqueRandomColor();
-          console.log(randomInt)
-          randomNUM= getRandomNumber(4)+1
+          randomNUM= getUniqueRandomOrder(4,1)
           $(".givenColor").css("background-color",colorList[randomInt[0]]);
-
-          $(".option"+randomNUM +" span").html(colorList[randomInt[0]])
-          $(".option"+randomNUM).find("input[name=color]").val(colorList[randomInt[0]]);
-          testCase[testCase.length] = {testNumber : testCase.length+1 , testColor:colorList[randomInt[0]] , startTime:1,StopTime:0, userResponse:""};
-
-
-          console.log(testCase)
+          for(i = 0 ; i < randomNUM.length ; i++){
+          $(".option"+randomNUM[i] +" span").html(colorList[randomInt[i]])
+          $(".option"+randomNUM[i]).find("input[name=color]").val(colorList[randomInt[i]]);
+          }
+        var d = new Date();
+        var n = d.getTime();
+          testCase[testCase.length] = {testNumber : testCase.length+1 , testColor:colorList[randomInt[0]] , startTime:n,StopTime:0, userResponse:""};
 
       }
 
@@ -114,8 +126,12 @@ $(function() {
       }
 
       $(".buttonChoiceItem").click(function(event){
-        console.log(event.currentTarget)
-        console.log($(event.currentTarget).find("input").val());
+        var d = new Date();
+        var n = d.getTime();
+        testCase[testCase.length -1]["userResponse"] = $(event.currentTarget).find("input").val();
+        testCase[testCase.length -1]["StopTime"] = n;
+
+        console.log(testCase);
         nextTest();
 
       })
