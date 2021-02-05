@@ -98,3 +98,17 @@ h1{
     position: relative;
     display: none;
 }
+
+.result_label{
+    display: inline-block;
+    width: 340px;
+}
+
+.counters{
+    float : left;
+    position: absolute;
+    left: 0;
+    top: -33px;
+    font-size: 20px;
+    background-color: #c6cfc8;
+}
